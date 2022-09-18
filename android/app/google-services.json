@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "101098122668",
+    "project_id": "memory-game-abea7",
+    "storage_bucket": "memory-game-abea7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101098122668:android:bb259d706958d5a9c59e09",
+        "android_client_info": {
+          "package_name": "com.example.card_memory_game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101098122668-6kijv5mpprmv8f8cfnfejarhl4ck8el6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUGucUVtcQJmfeAO5hxnULNcbWoSIYLXE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101098122668-6kijv5mpprmv8f8cfnfejarhl4ck8el6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
