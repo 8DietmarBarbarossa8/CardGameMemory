@@ -1,12 +1,13 @@
-import 'package:card_memory_game/word.dart';
+import 'package:card_memory_game/models/word.dart';
+import 'package:card_memory_game/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'game_page.dart';
+import 'screen/game_page.dart';
 
 List<Word> sourceWords = [];
-// # 6 chapter
+// # 10 chapter
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,13 @@ Future main() async {
     future: populateSourceWords(),
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
       if (snapshot.hasError) {
-        return const Text('Error :(\n Check your internet connection');
+        return const  Material(
+          child: Text(
+            'Error :(\n Check your internet connection',
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+          ),
+        );
       }
 
       if (snapshot.hasData) {
@@ -45,9 +52,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Memory Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: appTheme,
       home: const Material(child: GamePage()),
     );
   }
