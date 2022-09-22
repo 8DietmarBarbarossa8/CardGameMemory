@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'screen/game_page.dart';
 
 List<Word> sourceWords = [];
-// # 12
+// # 14
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

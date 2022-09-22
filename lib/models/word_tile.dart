@@ -1,10 +1,11 @@
 import 'dart:math';
 
-import 'package:card_memory_game/animation/flip_animation.dart';
+import 'package:card_memory_game/animations/matched_animation.dart';
 import 'package:card_memory_game/models/word.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../animations/flip_animation.dart';
 import '../managers/game_manager.dart';
 
 class WordTile extends StatelessWidget {
@@ -18,17 +19,7 @@ class WordTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<GameManager>(
       builder: ((_, notifier, __) {
-        bool animate = false;
-
-        if (notifier.canFlip) {
-          if (notifier.tappedWords.isNotEmpty &&
-              notifier.tappedWords.keys.last == index) {
-            animate = true;
-          }
-          if (notifier.reverseFlip && !notifier.answeredWords.contains(index)) {
-            animate = true;
-          }
-        }
+        bool animate = checkAnimationRun(notifier);
 
         return GestureDetector(
           onTap: (() {
@@ -45,17 +36,20 @@ class WordTile extends StatelessWidget {
             },
             animate: animate,
             reverse: notifier.reverseFlip,
-            word: Container(
-              padding: const EdgeInsets.all(16),
-              color: Colors.deepPurple,
-              child: !word.displayText
-                  ? Image.network(word.url)
-                  : FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Transform(
-                          transform: Matrix4.rotationY(pi),
-                          alignment: Alignment.center,
-                          child: Text(word.text))),
+            word: MatchedAnimation(
+              animate: notifier.answeredWords.contains(index),
+              numberOfWordsAnswered: notifier.answeredWords.length,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                child: !word.displayText
+                    ? Image.network(word.url)
+                    : FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Transform(
+                            transform: Matrix4.rotationY(pi),
+                            alignment: Alignment.center,
+                            child: Text(word.text))),
+              ),
             ),
           ),
         );
