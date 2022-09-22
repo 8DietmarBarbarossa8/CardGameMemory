@@ -1,9 +1,5 @@
 import 'dart:math';
-
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class FlipAnimation extends StatefulWidget {
   const FlipAnimation(
@@ -11,13 +7,15 @@ class FlipAnimation extends StatefulWidget {
       required this.word,
       required this.animate,
       required this.reverse,
-      required this.animationCompleted})
+      required this.animationCompleted,
+      this.delay = 0})
       : super(key: key);
 
   final Widget word;
   final bool animate;
   final bool reverse;
-  final Function(int) animationCompleted;
+  final Function(bool) animationCompleted;
+  final int delay;
 
   @override
   State<FlipAnimation> createState() => _FlipAnimationState();
@@ -32,50 +30,67 @@ class _FlipAnimationState extends State<FlipAnimation>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 2600),
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          widget.animationCompleted.call(0);
+          widget.animationCompleted.call(true);
         }
         if (status == AnimationStatus.dismissed) {
-          widget.animationCompleted.call(1);
+          widget.animationCompleted.call(false);
         }
       });
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _controller, curve: Curves.bounceInOut));
-
-    _controller.forward();
   }
 
   @override
-  void didChangeDependencies() {
-    if (widget.animate && widget.reverse) {
-      _controller.reverse();
-    } else {
-      _controller.reset();
-      _controller.forward();
-    }
-    super.didChangeDependencies();
+  void didUpdateWidget(covariant FlipAnimation oldWidget) {
+    Future.delayed(Duration(microseconds: widget.delay), () {
+      if (mounted) {
+        if (widget.animate) {
+          if (widget.reverse) {
+            _controller.reverse();
+          } else {
+            _controller.reset();
+            _controller.forward();
+          }
+        }
+      }
+    });
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
+      animation: _controller,
       builder: (BuildContext context, Widget? child) => Transform(
         alignment: Alignment.center,
         transform: Matrix4.identity()
           ..rotateY(_animation.value * pi)
           ..setEntry(3, 2, 0.005),
-        child: _controller.value >= .5
+        child: _controller.value >= 0.50
             ? widget.word
-            : const Icon(
-                Icons.question_mark,
-                size: 50,
-                color: Colors.white,
+            : Container(
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.question_mark,
+                  size: 50,
+                  color: Colors.white,
+                ),
               ),
       ),
-      animation: _controller,
     );
   }
 }
