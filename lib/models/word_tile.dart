@@ -22,7 +22,7 @@ class WordTile extends StatelessWidget {
       child: Consumer<GameManager>(
         builder: ((_, notifier, __) {
           bool animate = checkAnimationRun(notifier);
-    
+
           return GestureDetector(
             onTap: (() {
               if (!notifier.ignoredTaps &&
@@ -44,13 +44,10 @@ class WordTile extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   child: !word.displayText
-                      ? Image.network(word.url)
+                      ? _turnCard(Image.network(word.url))
                       : FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Transform(
-                              transform: Matrix4.rotationY(pi),
-                              alignment: Alignment.center,
-                              child: Text(word.text))),
+                          child: _turnCard(Text(word.text))),
                 ),
               ),
             ),
@@ -58,6 +55,13 @@ class WordTile extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  Transform _turnCard(Widget child) {
+    return Transform(
+        transform: Matrix4.rotationY(pi),
+        alignment: Alignment.center,
+        child: child);
   }
 
   bool checkAnimationRun(GameManager notifier) {

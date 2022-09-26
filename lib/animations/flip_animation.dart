@@ -81,7 +81,7 @@ class _FlipAnimationState extends State<FlipAnimation>
             ? widget.word
             : Container(
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
