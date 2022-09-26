@@ -1,3 +1,4 @@
+import 'package:card_memory_game/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
@@ -7,11 +8,15 @@ class ErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Material(
-      child: Text(
-        'Error :(\n Check your internet connection',
-        textDirection: TextDirection.ltr,
-        textAlign: TextAlign.center,
+    return Container(
+      color: Colors.deepPurple,
+      child: Center(
+        child: Text(
+          'Error :(\n Check your internet connection',
+          textDirection: TextDirection.ltr,
+          textAlign: TextAlign.center,
+          style: textStyle,
+        ),
       ),
     );
   }

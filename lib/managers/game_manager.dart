@@ -1,3 +1,4 @@
+import 'package:card_memory_game/managers/audio_manager.dart';
 import 'package:card_memory_game/models/word.dart';
 import 'package:flutter/material.dart';
 
@@ -21,19 +22,23 @@ class GameManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  onAnimationCompleted({required bool isForward}) {
+  onAnimationCompleted({required bool isForward}) async {
     if (tappedWords.length == 2) {
       if (isForward) {
         if (tappedWords.entries.elementAt(0).value.text ==
             tappedWords.entries.elementAt(1).value.text) {
           answeredWords.addAll(tappedWords.keys);
           if (answeredWords.length == 6) {
+            await AudioManager.playAudio('round');
             roundCompleted = true;
+          } else {
+            await AudioManager.playAudio('correct');
           }
           tappedWords.clear();
           canFlip = true;
           ignoredTaps = false;
         } else {
+          await AudioManager.playAudio('incorrect');
           reverseFlip = true;
         }
       } else {

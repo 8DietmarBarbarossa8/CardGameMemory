@@ -1,3 +1,4 @@
+import 'package:card_memory_game/animations/confetti_animation.dart';
 import 'package:card_memory_game/managers/game_manager.dart';
 import 'package:card_memory_game/models/word.dart';
 import 'package:card_memory_game/main.dart';
@@ -77,6 +78,7 @@ class _GamePageState extends State<GamePage> {
                                 )),
                       ),
                     ),
+                    ConfettiAnimation(animate: roundCompleted)
                   ],
                 );
               },
@@ -95,6 +97,7 @@ class _GamePageState extends State<GamePage> {
           text: sourceWords[i].text,
           url: sourceWords[i].url,
           displayText: true));
+      sourceWords.shuffle();
     }
   }
 
