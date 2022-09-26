@@ -1,5 +1,7 @@
 import 'package:card_memory_game/managers/game_manager.dart';
 import 'package:card_memory_game/models/word.dart';
+import 'package:card_memory_game/screen/error_page.dart';
+import 'package:card_memory_game/screen/loading_page.dart';
 import 'package:card_memory_game/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'screen/game_page.dart';
 
 List<Word> sourceWords = [];
-// # 14
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,22 +26,10 @@ Future main() async {
     future: populateSourceWords(),
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
       if (snapshot.hasError) {
-        return const Material(
-          child: Text(
-            'Error :(\n Check your internet connection',
-            textDirection: TextDirection.ltr,
-            textAlign: TextAlign.center,
-          ),
-        );
+        return const ErrorPage();
       }
 
-      if (snapshot.hasData) {
-        return const MyApp();
-      } else {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
+      return snapshot.hasData ? const MyApp() : const LoadingPage();
     },
   ));
 }

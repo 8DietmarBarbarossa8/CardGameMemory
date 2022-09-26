@@ -1,6 +1,8 @@
 import 'package:card_memory_game/managers/game_manager.dart';
 import 'package:card_memory_game/models/word.dart';
 import 'package:card_memory_game/main.dart';
+import 'package:card_memory_game/screen/error_page.dart';
+import 'package:card_memory_game/screen/loading_page.dart';
 import 'package:card_memory_game/tools/replay_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,7 @@ class _GamePageState extends State<GamePage> {
     super.initState();
   }
 
-  List<Word> _gridWords = [];
+  final List<Word> _gridWords = [];
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -30,11 +32,7 @@ class _GamePageState extends State<GamePage> {
         future: _cacheImages(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(
-                child: Text(
-              'Error :(\n Check your internet connection',
-              textAlign: TextAlign.center,
-            ));
+            return const ErrorPage();
           }
           if (snapshot.hasData) {
             return Selector<GameManager, bool>(
@@ -45,35 +43,46 @@ class _GamePageState extends State<GamePage> {
                     showDialog(
                         context: context,
                         barrierDismissible: false,
+                        barrierColor: Colors.transparent,
                         builder: (context) => const ReplayPopUp());
                   }
                 });
 
-                return SafeArea(
-                  child: Center(
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.only(
-                            left: widthPadding, right: widthPadding),
-                        itemCount: 6,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          mainAxisExtent: size.height * 0.38,
-                        ),
-                        itemBuilder: (context, index) => WordTile(
-                              index: index,
-                              word: _gridWords[index],
-                            )),
-                  ),
+                return Stack(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage('assets/images/cloud.jpg')),
+                      ),
+                    ),
+                    SafeArea(
+                      child: Center(
+                        child: GridView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(
+                                left: widthPadding, right: widthPadding),
+                            itemCount: 6,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              mainAxisExtent: size.height * 0.38,
+                            ),
+                            itemBuilder: (context, index) => WordTile(
+                                  index: index,
+                                  word: _gridWords[index],
+                                )),
+                      ),
+                    ),
+                  ],
                 );
               },
             );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const LoadingPage();
           }
         });
   }
@@ -87,7 +96,6 @@ class _GamePageState extends State<GamePage> {
           url: sourceWords[i].url,
           displayText: true));
     }
-    // _gridWords.shuffle();
   }
 
   Future<int> _cacheImages() async {
