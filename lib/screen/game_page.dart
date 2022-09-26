@@ -1,6 +1,9 @@
+import 'package:card_memory_game/managers/game_manager.dart';
 import 'package:card_memory_game/models/word.dart';
 import 'package:card_memory_game/main.dart';
+import 'package:card_memory_game/tools/replay_popup.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/word_tile.dart';
 
@@ -34,24 +37,38 @@ class _GamePageState extends State<GamePage> {
             ));
           }
           if (snapshot.hasData) {
-            return SafeArea(
-              child: Center(
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.only(
-                        left: widthPadding, right: widthPadding),
-                    itemCount: 6,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      mainAxisExtent: size.height * 0.38,
-                    ),
-                    itemBuilder: (context, index) => WordTile(
-                          index: index,
-                          word: _gridWords[index],
-                        )),
-              ),
+            return Selector<GameManager, bool>(
+              selector: (_, gameManager) => gameManager.roundCompleted,
+              builder: (_, roundCompleted, __) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  if (roundCompleted) {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const ReplayPopUp());
+                  }
+                });
+
+                return SafeArea(
+                  child: Center(
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                            left: widthPadding, right: widthPadding),
+                        itemCount: 6,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          mainAxisExtent: size.height * 0.38,
+                        ),
+                        itemBuilder: (context, index) => WordTile(
+                              index: index,
+                              word: _gridWords[index],
+                            )),
+                  ),
+                );
+              },
             );
           } else {
             return const Center(
@@ -70,7 +87,7 @@ class _GamePageState extends State<GamePage> {
           url: sourceWords[i].url,
           displayText: true));
     }
-    _gridWords.shuffle();
+    // _gridWords.shuffle();
   }
 
   Future<int> _cacheImages() async {

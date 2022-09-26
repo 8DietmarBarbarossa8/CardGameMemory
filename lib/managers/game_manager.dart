@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 class GameManager extends ChangeNotifier {
   Map<int, Word> tappedWords = {};
-  bool canFlip = false, reverseFlip = false, ignoredTaps = false;
+  bool canFlip = false,
+      reverseFlip = false,
+      ignoredTaps = false,
+      roundCompleted = false;
   List<int> answeredWords = [];
 
   titleTapped({required int index, required Word word}) {
@@ -24,7 +27,9 @@ class GameManager extends ChangeNotifier {
         if (tappedWords.entries.elementAt(0).value.text ==
             tappedWords.entries.elementAt(1).value.text) {
           answeredWords.addAll(tappedWords.keys);
-          if (answeredWords.length == 6) {}
+          if (answeredWords.length == 6) {
+            roundCompleted = true;
+          }
           tappedWords.clear();
           canFlip = true;
           ignoredTaps = false;
