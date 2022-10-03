@@ -91,14 +91,14 @@ class _GamePageState extends State<GamePage> {
 
   _setUp() {
     sourceWords.shuffle();
+    Set<Word> uniqueWords = sourceWords.toSet();
     for (int i = 0; i < 3; i++) {
-      _gridWords.add(sourceWords[i]);
-      _gridWords.add(Word(
-          text: sourceWords[i].text,
-          url: sourceWords[i].url,
-          displayText: true));
-      sourceWords.shuffle();
+      Word word = uniqueWords.first;
+      _gridWords.add(word);
+      _gridWords.add(Word(text: word.text, url: word.url, displayText: true));
+      uniqueWords.remove(word);
     }
+    _gridWords.shuffle();
   }
 
   Future<int> _cacheImages() async {
