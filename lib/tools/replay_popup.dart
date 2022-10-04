@@ -5,6 +5,8 @@ import 'package:card_memory_game/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'exit_dialog.dart';
+
 const messages = ['Awesome!', 'Fantastic!', 'Nice!', 'Great!'];
 const smiles = ['😲', '🤩', '😮', '😯'];
 
@@ -18,41 +20,8 @@ class ReplayPopUp extends StatelessWidget {
     random = _getRandom(smiles.length);
     String emoji = smiles[random];
 
-    Future<bool> _onWillPop() async {
-      return (await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Close the app?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop(false), //<-- SEE HERE
-                  child: const Text(
-                    'No',
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => SystemNavigator.pop(), // <-- SEE HERE
-                  child: const Text(
-                    'Yes',
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )) ??
-          false;
-    }
-
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: ExitDialog(context).onWillPop,
       child: SpinAnimation(
         child: AlertDialog(
           title: Text(

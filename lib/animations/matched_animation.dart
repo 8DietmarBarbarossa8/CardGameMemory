@@ -51,11 +51,15 @@ class _MatchedAnimationState extends State<MatchedAnimation>
   void didUpdateWidget(covariant MatchedAnimation oldWidget) {
     if (widget.animate) {
       if (!_correctColorIsSet) {
-        if (widget.numberOfWordsAnswered == 4) {
-          _correctColor = Colors.pink;
-        }
-        if (widget.numberOfWordsAnswered == 6) {
-          _correctColor = Colors.amber;
+        switch (widget.numberOfWordsAnswered) {
+          case 4:
+            _correctColor = Colors.pink;
+            break;
+          case 6:
+            _correctColor = Colors.orange;
+            break;
+          case 8:
+            _correctColor = Colors.amber;
         }
       }
 

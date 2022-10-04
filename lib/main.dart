@@ -22,16 +22,24 @@ Future main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  runApp(FutureBuilder(
-    future: populateSourceWords(),
-    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-      if (snapshot.hasError) {
-        return const ErrorPage();
-      }
+  runApp(
+    FutureBuilder(
+      future: populateSourceWords(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasError) {
+          return const ErrorPage(title: 'Check your internet connection');
+        }
 
-      return snapshot.hasData ? const MyApp() : const LoadingPage();
-    },
-  ));
+        return snapshot.hasData
+            ? (sourceWords.length > 4
+                ? const MyApp()
+                : const ErrorPage(
+                    title: 'There are too little words! Check your restore!',
+                  ))
+            : const LoadingPage();
+      },
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -44,10 +52,11 @@ class MyApp extends StatelessWidget {
       title: 'Memory Game',
       theme: appTheme,
       home: Material(
-          child: ChangeNotifierProvider(
-        create: (_) => GameManager(),
-        child: const GamePage(),
-      )),
+        child: ChangeNotifierProvider(
+          create: (_) => GameManager(),
+          child: const GamePage(),
+        ),
+      ),
     );
   }
 }
@@ -57,10 +66,13 @@ Future<int> populateSourceWords() async {
   final all = await ref.listAll();
 
   for (var item in all.items) {
-    sourceWords.add(Word(
+    sourceWords.add(
+      Word(
         text: item.name.substring(0, item.name.indexOf('.')),
         url: await item.getDownloadURL(),
-        displayText: false));
+        displayText: false,
+      ),
+    );
   }
 
   return 1;

@@ -2,8 +2,11 @@ import 'package:card_memory_game/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
+  final String title;
+
   const ErrorPage({
     Key? key,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -12,7 +15,7 @@ class ErrorPage extends StatelessWidget {
       color: Colors.deepPurple,
       child: Center(
         child: Text(
-          'Error :(\n Check your internet connection',
+          'Error :(\n $title',
           textDirection: TextDirection.ltr,
           textAlign: TextAlign.center,
           style: textStyle,

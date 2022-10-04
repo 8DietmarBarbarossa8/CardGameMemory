@@ -28,7 +28,7 @@ class GameManager extends ChangeNotifier {
         if (tappedWords.entries.elementAt(0).value.text ==
             tappedWords.entries.elementAt(1).value.text) {
           answeredWords.addAll(tappedWords.keys);
-          if (answeredWords.length == 6) {
+          if (answeredWords.length == 8) {
             await AudioManager.playAudio('round');
             roundCompleted = true;
           } else {
